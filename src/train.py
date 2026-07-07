@@ -18,7 +18,7 @@ def main():
                 mileages.append(float(row["km"]))
                 prices.append(float(row["price"]))
 
-        # 
+        # Normalize and get the standard desviation on the mileages
         total_mileages = 0
         mileages_mean = sum(mileages) / len(mileages)
         for mileage in mileages:
@@ -29,7 +29,7 @@ def main():
         for mileage in mileages:
             normalized_mileages.append((mileage - mileages_mean) / mileage_std)
 
-
+        # Normalize and get the standard desviation on the prices
         total_prices = 0
         prices_mean = sum(prices) / len(prices)
         for price in prices:
@@ -40,7 +40,7 @@ def main():
         for price in prices:
             normalized_prices.append((price - prices_mean) / price_std)
 
-
+        # Gradient Descent
         m = len(normalized_mileages)
         iterations = 1000
         learningRate = 0.1
@@ -57,17 +57,53 @@ def main():
             theta0 -= learningRate * (tmp_theta0 / m)
             theta1 -= learningRate * (tmp_theta1 / m)
 
-        
+        # Desnormalized the data
         theta1 = price_std * theta1 / mileage_std
         theta0 = prices_mean + price_std * theta0 - theta1 * mileages_mean
             
+        # Save the training
         model_data = {
             "theta0": theta0,
             "theta1": theta1
         }
-
         with open("model.json", 'w') as file:
             json.dump(model_data, file, indent=4)
+
+        # Bonus
+        total_error_mse = 0.0
+        total_error_mae = 0.0
+        error_variation = 0.0
+
+        for i in range(m):
+            prediction_error = theta0 + (theta1 * mileages[i])
+            # MSE (MEAN SQUARED ERROR)
+            total_error_mse += float(((prediction_error) - prices[i]) ** 2)
+
+            # MAE (Mean Absolute Error)
+            total_error_mae += abs(float((prediction_error) - prices[i]))
+
+            # (R-squared) = 1 - (error variation / total variation)
+            error_variation += (prices[i] - float((prediction_error))) ** 2
+
+        # MSE (MEAN SQUARED ERROR)
+        mse = total_error_mse / m
+
+        # RMSE (Root MSE) == √MSE
+        rmse = mse ** 0.5
+
+        # MAE (Mean Absolute Error)
+        mae = total_error_mae / m
+
+       # R2 (R-squared)
+        r2 = 1 - (error_variation / total_prices)
+
+        # Mostrar resultados en consola
+        print("\n--- Métricas de Rendimiento del Modelo ---")
+        print(f"MSE  (Mean Squared Error):  {mse:.4f}")
+        print(f"RMSE (Root MSE):            {rmse:.4f}")
+        print(f"MAE  (Mean Absolute Error): {mae:.4f}")
+        print(f"R²   (R-squared):           {r2:.4f}")
+        
 
     else:
         print("File not exist")
