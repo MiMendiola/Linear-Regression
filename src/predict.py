@@ -22,7 +22,7 @@ def main():
             theta1 = float(model["theta1"])
         
     estimatePrice = theta0 + (theta1 * mileage)
-    print("Estimated price:", estimatePrice)
+    print("Estimated price:", f"{estimatePrice:.2f}")
 
 if __name__ == "__main__":
     main()
