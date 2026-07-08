@@ -4,7 +4,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 
 def main():
-    data_path = Path('./dataa.csv')
+    data_path = Path('./data.csv')
     mileages = []
     normalized_mileages = []
     prices = []
@@ -107,7 +107,7 @@ def main():
 
         # Graphics
         # 1. Get all dots of the graphic
-        plt.scatter(mileages, prices, color="red")
+        plt.scatter(mileages, prices, color="blue")
 
         # 2. Get the max and min of mileages and get the end points of the prediction line
         max_mileage = max(mileages)
@@ -117,7 +117,7 @@ def main():
         pred_min_mileage = theta0 + (theta1 * min_mileage)
 
         # 3. Draw the regresion line
-        plt.plot([min_mileage, max_mileage],[pred_min_mileage, pred_max_mileage])
+        plt.plot([min_mileage, max_mileage],[pred_min_mileage, pred_max_mileage], color="red")
 
         # 4. Add labels and titles
         plt.title("Lineal Regresion: Prices vs Mileages")
