@@ -1,9 +1,10 @@
 import csv
 import json
 from pathlib import Path
+import matplotlib.pyplot as plt
 
 def main():
-    data_path = Path('./data.csv')
+    data_path = Path('./dataa.csv')
     mileages = []
     normalized_mileages = []
     prices = []
@@ -53,7 +54,6 @@ def main():
                 tmp_theta0 += prediction - normalized_prices[i]
                 tmp_theta1 += (prediction - normalized_prices[i]) * normalized_mileages[i]
 
-
             theta0 -= learningRate * (tmp_theta0 / m)
             theta1 -= learningRate * (tmp_theta1 / m)
 
@@ -94,7 +94,7 @@ def main():
         # MAE (Mean Absolute Error)
         mae = total_error_mae / m
 
-       # R2 (R-squared)
+        # R2 (R-squared)
         r2 = 1 - (error_variation / total_prices)
 
         # Mostrar resultados en consola
@@ -102,11 +102,37 @@ def main():
         print(f"MSE  (Mean Squared Error):  {mse:.4f}")
         print(f"RMSE (Root MSE):            {rmse:.4f}")
         print(f"MAE  (Mean Absolute Error): {mae:.4f}")
-        print(f"R²   (R-squared):           {r2:.4f}")
+        print(f"R²   (R-squared):           {r2:.4f}\n")
         
 
+        # Graphics
+        # 1. Get all dots of the graphic
+        plt.scatter(mileages, prices, color="red")
+
+        # 2. Get the max and min of mileages and get the end points of the prediction line
+        max_mileage = max(mileages)
+        min_mileage = min(mileages)
+
+        pred_max_mileage = theta0 + (theta1 * max_mileage)
+        pred_min_mileage = theta0 + (theta1 * min_mileage)
+
+        # 3. Draw the regresion line
+        plt.plot([min_mileage, max_mileage],[pred_min_mileage, pred_max_mileage])
+
+        # 4. Add labels and titles
+        plt.title("Lineal Regresion: Prices vs Mileages")
+        plt.xlabel("Mileage (KM)")
+        plt.ylabel("Prices (€)")
+
+        # 5. Create the graph
+        plt.savefig("./linear_regresion.png", dpi=300)
+        print(f"Graph exported correctly")
+
+        # 6. Show the graph
+        plt.show()
+        
     else:
-        print("File not exist")
+        print("File not exist") 
 
 if __name__ == "__main__":
     main()
