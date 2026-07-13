@@ -2,6 +2,7 @@ import csv
 import json
 from pathlib import Path
 import matplotlib.pyplot as plt
+import numpy as np
 
 def main():
     data_path = Path('./data.csv')
@@ -125,12 +126,19 @@ def main():
         plt.ylabel("Prices (€)")
 
         # 5. Create the graph
-        plt.savefig("./linear_regresion.png", dpi=300)
+        plt.savefig("./linear_regression.png", dpi=300)
         print(f"Graph exported correctly")
 
         # 6. Show the graph
         plt.show()
-        
+
+
+        # Other bonus
+        numpy_theta1, numpy_theta0 = np.polyfit(mileages, prices, 1)
+        print("\nNumpy.polyfit compare")
+        print(f"SUBJE: {theta0:.4f}, {theta1:.4f}")
+        print(f"NUMPY: {numpy_theta0:.4f}, {numpy_theta1:.4f}")
+
     else:
         print("File not exist") 
 
